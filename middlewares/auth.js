@@ -3,8 +3,12 @@ const basicAuth = require('basic-auth')
 const jwt = require('jsonwebtoken');
 
 class Auth {
-  constructor(){
-
+  constructor(lever=1){
+    // lever 用户权限等级 
+    this.lever = lever
+    Auth.USER = 8
+    Auth.Admin = 16
+    Auth.SUPER_ADMIN = 32
   }
 
   get m(){
@@ -27,7 +31,11 @@ class Auth {
         }
         throw new global.errs.Forbbiden(errMsg)
       }
-      // 之前防止了 uid, scope
+      if(decode.scope < this.lever){
+        errMsg = '用户权限不足'
+        throw new global.errs.Forbbiden(errMsg)
+      }
+      // 之前放置了 uid, scope
       // 自定义 ctx.auth, 放置 uid和scope
       ctx.auth = {
         uid: decode.name,

@@ -25,6 +25,19 @@ class User extends Model {
     }
     return user
   }
+  static async getUserByOpenid(openid){
+    const user = await User.findOne({
+      where:{
+        openid
+      }
+    })
+    return user
+  }
+  static async registerByOpenid(openid){
+    return await User.create({
+      openid
+    })
+  }
 }
 
 // mysql 一一对应的关系
